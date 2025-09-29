@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Fusion FRA Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="phoenix-logo-circular">
+                    <div class="phoenix-emblem-circular">
+                        <img src="C:\Users\Rakshitha\OneDrive\Desktop\harshith\Hackthon\dam die\phoenixf\image.jpg" alt="Phoenix Logo" class="logo-image">
+                    </div>
+                </div>
+                <div class="header-title">
+                    <h1 data-translate="title">Phoenix Fusion FRA</h1>
+                    <p data-translate="subtitle">Forest Rights Act Monitoring System</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-language-selector">
+                    <select id="main-language-select" class="form-control language-select-main">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="or">ଓଡ଼ିଆ</option>
+                        <option value="mr">मराठी</option>
+                        <option value="gu">ગુજરાતી</option>
+                        <option value="ta">தமிழ்</option>
+                    </select>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">51.2L</div>
+                        <div class="stat-label" data-translate="total_claims">Total Claims</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">25.1L</div>
+                        <div class="stat-label" data-translate="titles_distributed">Titles Distributed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">49.02%</div>
+                        <div class="stat-label" data-translate="approval_rate">Approval Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7.5L</div>
+                        <div class="stat-label" data-translate="pending_claims">Pending Claims</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Map Section -->
+        <section class="map-section">
+            <div class="section-header">
+                <h2 data-translate="map_title">State-wise FRA Implementation</h2>
+                <div class="map-controls">
+                    <div class="state-filters">
+                        <button class="filter-btn active" data-state="all" data-translate="all_states">All States</button>
+                        <button class="filter-btn" data-state="MP">Madhya Pradesh</button>
+                        <button class="filter-btn" data-state="TR">Tripura</button>
+                        <button class="filter-btn" data-state="OD">Odisha</button>
+                        <button class="filter-btn" data-state="TG">Telangana</button>
+                    </div>
+                    <div class="map-layer-controls">
+                        <button class="layer-btn active" data-layer="street">Street</button>
+                        <button class="layer-btn" data-layer="satellite1">Satellite</button>
+                        <button class="layer-btn" data-layer="satellite2">Satellite 2</button>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container">
+                <div id="india-map"></div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-color high"></div>
+                        <span data-translate="high_approval">High Approval Rate (>55%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color medium"></div>
+                        <span data-translate="medium_approval">Medium Approval Rate (45-55%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color low"></div>
+                        <span data-translate="low_approval">Low Approval Rate (<45%)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OCR Simulator Section -->
+        <section class="ocr-section compact">
+            <div class="section-header">
+                <h2 data-translate="ocr_title">OCR Simulator</h2>
+                <p data-translate="ocr_subtitle">Upload and process government documents</p>
+            </div>
+            <div class="ocr-container-compact">
+                <div class="ocr-upload-compact">
+                    <div class="upload-area-compact" id="upload-area">
+                        <div class="upload-icon">📄</div>
+                        <h4 data-translate="upload_title">Drop documents here or click to upload</h4>
+                        <p data-translate="upload_formats">JPG, PNG, PDF formats supported</p>
+                        <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.pdf" multiple hidden>
+                    </div>
+                    <div class="document-types-compact">
+                        <h5 data-translate="supported_docs">Supported Documents:</h5>
+                        <div class="doc-type-grid-compact">
+                            <span class="doc-type">FRA Patta</span>
+                            <span class="doc-type">Aadhaar</span>
+                            <span class="doc-type">Voter ID</span>
+                            <span class="doc-type">Land Records</span>
+                            <span class="doc-type">Certificates</span>
+                            <span class="doc-type">Bank Docs</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="ocr-results-compact" id="ocr-results" style="display: none;">
+                    <h4 data-translate="extracted_info">Extracted Information</h4>
+                    <div class="processing-status">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p class="status-text" data-translate="processing">Processing document...</p>
+                    </div>
+                    <div class="extracted-data"></div>
+                    <div class="ocr-actions">
+                        <button class="btn btn--sm btn--primary" data-translate="auto_fill">Auto-fill</button>
+                        <button class="btn btn--sm btn--secondary" data-translate="verify">Verify</button>
+                        <button class="btn btn--sm btn--outline" data-translate="export">Export</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="analytics-section">
+            <div class="section-header">
+                <h2 data-translate="analytics_title">Analytics & Insights</h2>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="claims-chart"></canvas>
+                </div>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="forest-chart"></canvas>
+                </div>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="approval-rate-chart"></canvas>
+                </div>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="scheme-beneficiaries-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Central Schemes Section with Links -->
+        <section class="schemes-section">
+            <div class="section-header">
+                <h2 data-translate="schemes_title">Central Schemes Integration</h2>
+            </div>
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <h3>PM-KISAN</h3>
+                    <p data-translate="pmkisan_desc">Direct income support for farmers</p>
+                    <div class="scheme-stats">
+                        <div><span data-translate="eligible_beneficiaries">Eligible Beneficiaries:</span> <strong>12.56L</strong></div>
+                        <div><span data-translate="benefit">Benefit:</span> <strong>₹6,000/year</strong></div>
+                    </div>
+                    <div class="scheme-criteria">
+                        <span class="tag" data-translate="valid_patta">Valid FRA Patta</span>
+                        <span class="tag" data-translate="agricultural_land">Agricultural Land</span>
+                        <span class="tag" data-translate="aadhaar_linked">Aadhaar Linked</span>
+                    </div>
+                    <div class="scheme-link">
+                        <a href="https://pmkisan.gov.in/" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                            <span data-translate="visit_portal">Visit Official Portal</span> →
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <h3>Jal Jeevan Mission</h3>
+                    <p data-translate="jjm_desc">Providing tap water connection to every rural household</p>
+                    <div class="scheme-stats">
+                        <div><span data-translate="eligible_beneficiaries">Eligible Beneficiaries:</span> <strong>8.90L</strong></div>
+                        <div><span data-translate="benefit">Benefit:</span> <strong data-translate="free_connection">Free Connection</strong></div>
+                    </div>
+                    <div class="scheme-criteria">
+                        <span class="tag" data-translate="rural_household">Rural Household</span>
+                        <span class="tag" data-translate="valid_patta">FRA Patta</span>
+                    </div>
+                    <div class="scheme-link">
+                        <a href="https://jaljeevanmission.gov.in/" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                            <span data-translate="visit_portal">Visit Official Portal</span> →
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <h3>MGNREGA</h3>
+                    <p data-translate="mgnrega_desc">Rural employment guarantee scheme</p>
+                    <div class="scheme-stats">
+                        <div><span data-translate="eligible_beneficiaries">Eligible Beneficiaries:</span> <strong>21.00L</strong></div>
+                        <div><span data-translate="benefit">Benefit:</span> <strong data-translate="hundred_days_work">100 days work</strong></div>
+                    </div>
+                    <div class="scheme-criteria">
+                        <span class="tag" data-translate="rural_household">Rural Household</span>
+                        <span class="tag" data-translate="job_card">Job Card</span>
+                    </div>
+                    <div class="scheme-link">
+                        <a href="https://nrega.nic.in/" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                            <span data-translate="visit_portal">Visit Official Portal</span> →
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <h3>PM Awas Yojana</h3>
+                    <p data-translate="pmay_desc">Housing for rural poor</p>
+                    <div class="scheme-stats">
+                        <div><span data-translate="eligible_beneficiaries">Eligible Beneficiaries:</span> <strong>4.50L</strong></div>
+                        <div><span data-translate="benefit">Benefit:</span> <strong data-translate="financial_assistance">Financial Assistance</strong></div>
+                    </div>
+                    <div class="scheme-criteria">
+                        <span class="tag" data-translate="bpl_household">BPL Household</span>
+                        <span class="tag" data-translate="landless">Landless</span>
+                    </div>
+                    <div class="scheme-link">
+                        <a href="https://pmayg.gov.in/" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+                            <span data-translate="visit_portal">Visit Official Portal</span> →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- State Details Modal -->
+    <div class="modal hidden" id="state-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-state-name"></h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="state-stats-grid">
+                    <div class="stat-group">
+                        <h3 data-translate="fra_claims_status">FRA Claims Status</h3>
+                        <div class="stat-row">
+                            <span data-translate="total_claims">Total Claims:</span>
+                            <strong id="total-claims">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="approved">Approved:</span>
+                            <strong id="approved-claims" class="success">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="pending">Pending:</span>
+                            <strong id="pending-claims" class="warning">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="rejected">Rejected:</span>
+                            <strong id="rejected-claims" class="error">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="approval_rate">Approval Rate:</span>
+                            <strong id="approval-rate">-</strong>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <h3 data-translate="forest_cover_data">Forest Cover Data</h3>
+                        <div class="stat-row">
+                            <span data-translate="forest_cover">Forest Cover:</span>
+                            <strong id="forest-cover">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="coverage_percent">Coverage %:</span>
+                            <strong id="forest-percentage">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="tree_cover">Tree Cover:</span>
+                            <strong id="tree-cover">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="carbon_stock">Carbon Stock:</span>
+                            <strong id="carbon-stock">-</strong>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <h3 data-translate="demographics">Demographics</h3>
+                        <div class="stat-row">
+                            <span data-translate="st_population">ST Population:</span>
+                            <strong id="st-population">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="forest_dependent">Forest Dependent:</span>
+                            <strong id="forest-dependent">-</strong>
+                        </div>
+                        <div class="stat-row">
+                            <span data-translate="tribal_districts">Tribal Districts:</span>
+                            <strong id="tribal-districts">-</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Multilingual AI Assistant with Voice Support -->
+    <div class="ai-assistant" id="ai-assistant">
+        <button class="ai-toggle" id="ai-toggle">🤖 <span data-translate="ai_assistant">AI Assistant</span></button>
+        <div class="ai-chat hidden" id="ai-chat">
+            <div class="ai-header">
+                <h3 data-translate="phoenix_ai"> AI Assistant</h3>
+                <div class="voice-controls">
+                    <button class="voice-btn" id="voice-btn" title="Start Voice Input">
+                        <span class="voice-icon">🎤</span>
+                        <span class="voice-status" id="voice-status">Click to speak</span>
+                    </button>
+                </div>
+                <button class="ai-close" id="ai-close">&times;</button>
+            </div>
+            <div class="ai-messages" id="ai-messages">
+                <div class="ai-message bot">
+                    <p id="welcome-message">Hello! How can I help you with FRA queries?</p>
+                    <span class="pronunciation-tip" id="pronunciation-tip"></span>
+                </div>
+                <div class="language-sample-questions" id="sample-questions">
+                    <!-- Sample questions will be dynamically populated -->
+                </div>
+            </div>
+            <div class="ai-input-container">
+                <div class="current-language" id="current-language">🌐 English</div>
+                <div class="ai-input">
+                    <input type="text" id="ai-input" placeholder="Ask about FRA data, claims, or forest coverage..." data-translate-placeholder="ai_placeholder">
+                    <button id="ai-send" data-translate="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
